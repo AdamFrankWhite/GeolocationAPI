@@ -1,10 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
+import serverless from "serverless-http";
 import validator from "validator";
 dotenv.config();
 
 const app = express();
+// parse json bodies
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 const port = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
 // Create a MongoClient instance
@@ -71,3 +75,5 @@ app.get("/coords", async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
 });
+// Use serverless-http to adapt the app for AWS Lambda
+export const handler = serverless(app);
