@@ -27,7 +27,8 @@ function sanitizeAndValidateInput(q) {
     return isValid ? sanitizedInput : null;
 }
 
-async function runQuery(postcode) {
+async function runQuery(input) {
+    let postcode = input.toUpperCase();
     try {
         console.log("Running query for postcode: " + postcode);
         const database = client.db("postcodesToLatLng");
@@ -37,7 +38,7 @@ async function runQuery(postcode) {
     } catch (e) {
         console.error(e);
     } finally {
-        await client.close();
+        // await client.close();
     }
 }
 
@@ -59,7 +60,7 @@ export const handler = async (event) => {
         }
 
         // Run the query
-        const result = await runQuery(sanitizedInput.toUpperCase());
+        const result = await runQuery(sanitizedInput);
 
         return {
             statusCode: 200,
