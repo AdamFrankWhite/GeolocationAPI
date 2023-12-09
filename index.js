@@ -59,7 +59,7 @@ export const handler = async (event) => {
         }
 
         // Run the query
-        const result = await runQuery(sanitizedInput);
+        const result = await runQuery(sanitizedInput.toUpperCase());
 
         return {
             statusCode: 200,
