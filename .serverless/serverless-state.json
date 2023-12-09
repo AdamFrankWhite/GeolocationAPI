@@ -174,7 +174,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/geolocation-api/dev/1702117269279-2023-12-09T10:21:09.279Z/geolocation-api.zip"
+                "S3Key": "serverless/geolocation-api/dev/1702117561507-2023-12-09T10:26:01.507Z/geolocation-api.zip"
               },
               "Handler": "index.handler",
               "Runtime": "nodejs18.x",
@@ -192,14 +192,14 @@
               "ApiLogGroup"
             ]
           },
-          "ApiLambdaVersionC4qKfLEEHwP4B5QMJoLbUU2oQvpFrMokjBDC3LUzIk": {
+          "ApiLambdaVersiondmEGBoSKxhsJb9TUYZUKVg03VKO6XJY1mqmDHvvCjd0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "JlnivsjaYuo4ed/7QRMk4NYX1QA19T4CTCn8J9vtHw8="
+              "CodeSha256": "r6y0W1qb8TMvA3kDANMbTsZGUpQe68J6ILzsXOEQrSA="
             }
           },
           "HttpApi": {
@@ -307,7 +307,7 @@
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersionC4qKfLEEHwP4B5QMJoLbUU2oQvpFrMokjBDC3LUzIk"
+              "Ref": "ApiLambdaVersiondmEGBoSKxhsJb9TUYZUKVg03VKO6XJY1mqmDHvvCjd0"
             },
             "Export": {
               "Name": "sls-geolocation-api-dev-ApiLambdaFunctionQualifiedArn"
@@ -453,7 +453,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "ApiLambdaVersionC4qKfLEEHwP4B5QMJoLbUU2oQvpFrMokjBDC3LUzIk"
+        "versionLogicalId": "ApiLambdaVersiondmEGBoSKxhsJb9TUYZUKVg03VKO6XJY1mqmDHvvCjd0"
       }
     },
     "configValidationMode": "warn",
@@ -472,7 +472,7 @@
     "artifact": "C:\\Users\\adamw\\Coding\\GeolocationAPI\\.serverless\\geolocation-api.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/geolocation-api/dev/1702117269279-2023-12-09T10:21:09.279Z",
+    "artifactDirectoryName": "serverless/geolocation-api/dev/1702117561507-2023-12-09T10:26:01.507Z",
     "artifact": "geolocation-api.zip"
   }
 }
