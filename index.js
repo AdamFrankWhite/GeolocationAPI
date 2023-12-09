@@ -1,19 +1,13 @@
-import express from "express";
-import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
-import serverless from "serverless-http";
 import validator from "validator";
+
+// Load environment variables from .env file
+import dotenv from "dotenv";
 dotenv.config();
 
-const app = express();
-// parse json bodies
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-const port = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
-// Create a MongoClient instance
 const client = new MongoClient(uri);
-// Connect to MongoDB outside of request handlers
+
 async function connectToMongo() {
     try {
         await client.connect();
@@ -28,52 +22,54 @@ await connectToMongo();
 
 // Function to sanitize and validate input
 function sanitizeAndValidateInput(q) {
-    // Use the validator library for input validation and sanitization
-    const sanitizedInput = validator.escape(q); // HTML escape to prevent XSS
-    const isValid = /^[a-zA-Z0-9 ]+$/.test(sanitizedInput); // Check if it contains only alphanumeric characters and spaces
-
+    const sanitizedInput = validator.escape(q);
+    const isValid = /^[a-zA-Z0-9 ]+$/.test(sanitizedInput);
     return isValid ? sanitizedInput : null;
 }
+
 async function runQuery(postcode) {
     try {
         console.log("Running query for postcode: " + postcode);
-
-        // Select the database and collection
         const database = client.db("postcodesToLatLng");
         const collection = database.collection("postcodes");
-
-        // Query for a single document
         const result = await collection.findOne({ postcode });
-
         return { lat: result.latitude, lng: result.longitude };
     } catch (e) {
         console.error(e);
     } finally {
-        // Ensure the client is closed after each request
         await client.close();
     }
 }
 
-app.get("/coords", async (req, res) => {
-    let { q } = req.query;
-    // Sanitize and validate the input
-    const sanitizedInput = sanitizeAndValidateInput(q);
-
-    if (sanitizedInput === null) {
-        return res.status(400).json({ error: "Invalid input" });
-    }
-
+export const handler = async (event) => {
     try {
+        // Extract the payload from the Lambda event
+        const { body } = event;
+        const { q } = JSON.parse(body);
+        console.log(q);
+        // Sanitize and validate the input
+        const sanitizedInput = sanitizeAndValidateInput(q);
+
+        // Check if the input is invalid
+        if (sanitizedInput === null) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ error: "Invalid input" }),
+            };
+        }
+
+        // Run the query
         const result = await runQuery(sanitizedInput);
-        res.json(result);
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ result }),
+        };
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Internal Server Error" });
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: "Internal Server Error" }),
+        };
     }
-});
-
-app.listen(port, () => {
-    console.log(`Server is listening on port ${port}`);
-});
-// Use serverless-http to adapt the app for AWS Lambda
-export const handler = serverless(app);
+};
